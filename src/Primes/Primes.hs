@@ -18,15 +18,15 @@ findPrimes lim
 
 exec :: Int -> Int -> [Int] -> [Int]
 exec curr lim xs
-  | curr >= lim             = xs
-  | divisibleByElem curr xs = exec (curr + 1) lim xs
-  | otherwise               = exec (curr + 1) lim (curr : xs)
+  | curr >= lim              = xs
+  | divisibleByElem curr xs  = exec (curr + 1) lim xs
+  | otherwise                = exec (curr + 1) lim (curr : xs)
 
 divisibleByElem :: Int -> [Int] -> Bool
-divisibleByElem _ []  = False
-divisibleByElem 0 _ = True
+divisibleByElem _ []      = False
+divisibleByElem 0 _       = True
 divisibleByElem n (x:xs)
- | rem n x == 0    = True
- | otherwise       = divisibleByElem n xs
+ | rem n x == 0           = True
+ | otherwise              = divisibleByElem n xs
 
 
