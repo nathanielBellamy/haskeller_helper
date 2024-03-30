@@ -9,18 +9,18 @@ primes :: String -> IO()
 primes x = let i = read x :: Int
   in do
     putStrLn ("We will find primes up to: " ++ x)
-    putStrLn (show (findPrimes i))
+    putStrLn (show (primesUpTo i))
 
-findPrimes :: Int -> [Int]
-findPrimes lim
+primesUpTo :: Int -> [Int]
+primesUpTo lim
   | lim < 2       = []
-  | otherwise     = exec 3 lim [2]
+  | otherwise     = findPrimes 3 lim [2]
 
-exec :: Int -> Int -> [Int] -> [Int]
-exec curr lim xs
-  | curr >= lim              = xs
-  | divisibleByElem curr xs  = exec (curr + 1) lim xs
-  | otherwise                = exec (curr + 1) lim (curr : xs)
+findPrimes :: Int -> Int -> [Int] -> [Int]
+findPrimes curr lim ps
+  | curr >= lim              = ps
+  | divisibleByElem curr xs  = findPrimes (curr + 1) lim ps
+  | otherwise                = findPrimes (curr + 1) lim (curr : ps)
 
 divisibleByElem :: Int -> [Int] -> Bool
 divisibleByElem _ []      = False
@@ -28,5 +28,4 @@ divisibleByElem 0 _       = True
 divisibleByElem n (x:xs)
  | rem n x == 0           = True
  | otherwise              = divisibleByElem n xs
-
 
