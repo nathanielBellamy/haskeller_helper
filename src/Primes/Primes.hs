@@ -6,10 +6,12 @@ import Data.List
 import Data.Bool
 
 primes :: String -> IO()
-primes x = let i = read x :: Int
+primes x =
+  let i   = read x :: Int
+      res = primesUpTo i
   in do
     putStrLn ("We will find primes up to: " ++ x)
-    putStrLn (show (primesUpTo i))
+    putStrLn (show res)
 
 primesUpTo :: Int -> [Int]
 primesUpTo lim
@@ -19,7 +21,7 @@ primesUpTo lim
 findPrimes :: Int -> Int -> [Int] -> [Int]
 findPrimes curr lim ps
   | curr >= lim              = ps
-  | divisibleByElem curr xs  = findPrimes (curr + 1) lim ps
+  | divisibleByElem curr ps  = findPrimes (curr + 1) lim ps
   | otherwise                = findPrimes (curr + 1) lim (curr : ps)
 
 divisibleByElem :: Int -> [Int] -> Bool
