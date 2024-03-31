@@ -2,11 +2,13 @@
 - Haskell Cli Sandbox
 
 ### Compile
-`cd src && ghc -o ../build/hh Main.hs && cd ..`
+`./run_build`
 
 ### Run
-- default: `build/hh`
-- primes: `build/hh -p x`
+- `bin/hh`
+  - default
+- `bin/hh -p x`
   - find prime numbers up to integer `x`
-- help: `build/hh -h`
+- `bin/hh -h`
+  - help
 
