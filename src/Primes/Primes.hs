@@ -1,4 +1,4 @@
-module Primes.Primes (
+module Src.Primes.Primes (
   primes
 ) where
 

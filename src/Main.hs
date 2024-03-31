@@ -5,7 +5,7 @@ module Main
 
 import System.Environment (getArgs)
 import Data.List
-import Primes.Primes
+import Src.Primes.Primes
 
 main :: IO()
 main = do
