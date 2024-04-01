@@ -1,19 +1,24 @@
 module Src.Notes.Notes (
+  noteAddItem,
   notes
 ) where
 
 import System.Directory (createDirectoryIfMissing, doesPathExist)
-import System.FilePath.Posix
+import System.FilePath.Posix (takeDirectory)
 
-notes :: String -> IO()
+notes :: String -> IO ()
 notes fileName = do
-  contents <- loadFile fileName
-  let oldNotes = lines contents
-  putStrLn(head oldNotes)
-  putStrLn(head ( tail oldNotes))
+  contents <- createLoadFile fileName
+  (printItems . lines) contents
 
-loadFile :: String -> IO String
-loadFile fileName =
+printItems :: [String] -> IO ()
+printItems []     = putStrLn("      ")
+printItems (x:xs) = do
+  putStrLn x
+  printItems xs
+
+createLoadFile :: String -> IO String
+createLoadFile fileName =
   let dirPath = "~/.hh/notes"
       filePath = dirPath ++ "/" ++ fileName ++ ".txt"
   in do
@@ -30,3 +35,13 @@ createNoteFile filePath fileName =
     createDirectoryIfMissing True (takeDirectory filePath)
     writeFile filePath header
     readFile filePath
+
+
+noteAddItem :: String -> String -> IO ()
+noteAddItem fileName note =
+  let filePath = "~/.hh/notes/" ++ fileName ++ ".txt"
+  in do
+    pathExists <- doesPathExist(filePath)
+    case pathExists of
+      True  -> appendFile filePath $ "\n" ++ note
+      False -> putStrLn("Could not find note: " ++ fileName)

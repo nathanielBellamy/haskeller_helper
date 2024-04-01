@@ -14,11 +14,20 @@ main = do
   handle args
 
 handle args = do
-  case args of
-    ["-p", x]  -> primes x
-    ["-n", x]  -> notes x
+    case args of
+      -- primes
+      ["-p", x]     -> primes x
 
-    ["-h"]     -> printHelp
-    _          -> putStrLn "ʎ✋ Haskeller Helper ʎ✋ \n use -h for help "
+      -- notes
+      ["-n", x]     -> notes x
+      ["-na", x, y] -> noteAddItem x y
+
+      -- default
+      ["-h"]        -> printHelp
+      _             -> printDefault
+
+printDefault =
+  let msg = "ʎ✋ Haskeller Helper ʎ✋ \n use -h for help "
+  in do putStrLn msg
 
 printHelp = putStrLn "TODO: Make Help Section"

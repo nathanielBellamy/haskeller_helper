@@ -13,10 +13,26 @@ $ build/run
 ```
 
 ### Run
-- `./bin/hh`
+- `bin/hh`
   - default
-- `./bin/hh -p x`
-  - find prime numbers up to integer `x`
 - `bin/hh -h`
   - help
+
+#### Notes
+- `bin/hh -n <name>`
+  - Create new note `<name>.txt`
+  - If note exists, displays note.
+- `bin/hh -na <name> <item>`
+  - Add new item to note
+
+- eg:
+```
+$ bin/hh -n todo
+$ bin/hh -na todo "rake leaves"
+$ bin/hh -n todo
+```
+
+#### Primes
+- `bin/hh -p x`
+  - find prime numbers up to integer `x`
 
