@@ -6,6 +6,9 @@ module Src.Notes.Notes (
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
 
+notesDir :: String
+notesDir = "~/.hh/notes"
+
 notes :: String -> IO ()
 notes fileName = do
   contents <- createLoadFile fileName
@@ -19,8 +22,7 @@ printItems (x:xs) = do
 
 createLoadFile :: String -> IO String
 createLoadFile fileName =
-  let dirPath = "~/.hh/notes"
-      filePath = dirPath ++ "/" ++ fileName ++ ".txt"
+  let filePath = notesDir ++ "/" ++ fileName ++ ".txt"
   in do
     pathExists <- doesPathExist(filePath)
     case pathExists of
@@ -36,10 +38,9 @@ createNoteFile filePath fileName =
     writeFile filePath header
     readFile filePath
 
-
 noteAddItem :: String -> String -> IO ()
 noteAddItem fileName note =
-  let filePath = "~/.hh/notes/" ++ fileName ++ ".txt"
+  let filePath = notesDir ++ "/" ++ fileName ++ ".txt"
   in do
     pathExists <- doesPathExist(filePath)
     case pathExists of
