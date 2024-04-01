@@ -4,17 +4,18 @@
 ### Compile
 #### First Time
 ```
-$ cd build
-$ ghc -o ../run_build Main.hs
-$ cd ..
+$ ghc -o build/run build/Main.hs
+$ build/run
 ```
 #### Otherwise
-`./run_build`
+```
+$ build/run
+```
 
 ### Run
-- `bin/hh`
+- `./bin/hh`
   - default
-- `bin/hh -p x`
+- `./bin/hh -p x`
   - find prime numbers up to integer `x`
 - `bin/hh -h`
   - help

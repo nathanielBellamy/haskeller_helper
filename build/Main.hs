@@ -6,6 +6,6 @@ import System.Environment (getArgs)
 
 main = do
   args <- getArgs
-  createDirectoryIfMissing True "../bin"
+  createDirectoryIfMissing True "bin"
   callCommand ("ghc -o bin/hh Src/Main.hs " ++ (concat args))
 
