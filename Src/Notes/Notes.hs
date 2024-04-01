@@ -39,10 +39,10 @@ createNoteFile filePath fileName =
     readFile filePath
 
 noteAddItem :: String -> String -> IO ()
-noteAddItem fileName note =
+noteAddItem fileName item =
   let filePath = notesDir ++ "/" ++ fileName ++ ".txt"
   in do
     pathExists <- doesPathExist(filePath)
     case pathExists of
-      True  -> appendFile filePath $ "\n" ++ note
+      True  -> appendFile filePath $ "\n" ++ item
       False -> putStrLn("Could not find note: " ++ fileName)
