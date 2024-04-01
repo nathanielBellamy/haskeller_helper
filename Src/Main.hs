@@ -6,6 +6,7 @@ module Main
 import System.Environment (getArgs)
 import Data.List
 import Src.Primes.Primes
+import Src.Notes.Notes
 
 main :: IO()
 main = do
@@ -15,6 +16,8 @@ main = do
 handle args = do
   case args of
     ["-p", x]  -> primes x
+    ["-n", x]  -> notes x
+
     ["-h"]     -> printHelp
     _          -> putStrLn "ʎ✋ Haskeller Helper ʎ✋ \n use -h for help "
 
