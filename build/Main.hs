@@ -1,7 +1,11 @@
 import System.Process
 
+import System.Directory (createDirectoryIfMissing)
 import System.Environment (getArgs)
+
 
 main = do
   args <- getArgs
-  callCommand ("ghc -o bin/hh src/Main.hs " ++ (concat args))
+  createDirectoryIfMissing True "../bin"
+  callCommand ("ghc -o bin/hh Src/Main.hs " ++ (concat args))
+

@@ -2,6 +2,13 @@
 - Haskell Cli Sandbox
 
 ### Compile
+#### First Time
+```
+$ cd build
+$ ghc -o ../run_build Main.hs
+$ cd ..
+```
+#### Otherwise
 `./run_build`
 
 ### Run
