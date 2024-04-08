@@ -6,18 +6,23 @@ module Src.Notes.Notes (
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
 
+import Src.Notes.Item (Item, fromString)
+
 notesDir :: String
 notesDir = "~/.hh/notes"
 
 notes :: String -> IO ()
 notes fileName = do
   contents <- createLoadFile fileName
-  (printItems . lines) contents
+  (printItems . parseItems) contents
 
-printItems :: [String] -> IO ()
-printItems []     = putStrLn("      ")
+parseItems :: String -> [Maybe Item]
+parseItems xs = map fromString (lines xs)
+
+printItems :: [Maybe Item] -> IO ()
+printItems []     = putStrLn("")
 printItems (x:xs) = do
-  putStrLn x
+  (putStrLn . show) x
   printItems xs
 
 createLoadFile :: String -> IO String
@@ -32,7 +37,7 @@ createLoadFile fileName =
 createNoteFile :: String -> String -> IO String
 createNoteFile filePath fileName =
   let
-    header = ("-- " ++ filePath ++ "\n-- HH NOTE: " ++ fileName)
+    header = "" -- ("-- " ++ filePath ++ "\n-- HH NOTE: " ++ fileName)
   in do
     createDirectoryIfMissing True (takeDirectory filePath)
     writeFile filePath header

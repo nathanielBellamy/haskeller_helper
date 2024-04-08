@@ -27,7 +27,7 @@ handle args = do
       _             -> printDefault
 
 printDefault =
-  let msg = "ʎ✋ Haskeller Helper ʎ✋ \n use -h for help "
+  let msg = "ʎ✋ Haskeller Helper ʎ✋ \n You may have arrived here due to unrecognized input pattern. \n Use -h for help "
   in do putStrLn msg
 
 printHelp = putStrLn "TODO: Make Help Section"
