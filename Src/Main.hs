@@ -4,6 +4,7 @@ module Main
  ) where
 
 import System.Environment (getArgs)
+import System.IO
 import Data.List
 import Src.Primes.Primes
 import Src.Notes.Notes
@@ -13,8 +14,12 @@ main = do
   args <- getArgs
   handle args
 
+handle :: [String] -> IO ()
 handle args = do
     case args of
+      -- repl
+      ["-repl"]     -> repl
+
       -- primes
       ["-p", x]     -> primes x
 
@@ -31,3 +36,20 @@ printDefault =
   in do putStrLn msg
 
 printHelp = putStrLn "TODO: Make Help Section"
+
+
+repl :: IO ()
+repl = do
+  input <- replRead
+  let args = words input
+
+  case args of
+    [":quit"]  -> putStrLn ("HH-REPL> QUIT <<")
+    _          -> handle args >> repl
+
+replRead :: IO String
+replRead = putStr "HH-REPL> "
+         >> hFlush stdout
+         >> getLine
+
+
