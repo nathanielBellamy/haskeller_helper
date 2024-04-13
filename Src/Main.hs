@@ -44,11 +44,11 @@ repl = do
   let args = words input
 
   case args of
-    [":quit"]  -> putStrLn ("HH-REPL> QUIT <<")
+    [":quit"]  -> putStrLn ("====HH")
     _          -> handle args >> repl
 
 replRead :: IO String
-replRead = putStr "HH-REPL> "
+replRead = putStr "HH> "
          >> hFlush stdout
          >> getLine
 

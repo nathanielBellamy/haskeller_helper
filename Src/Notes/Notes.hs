@@ -6,7 +6,7 @@ module Src.Notes.Notes (
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
 
-import Src.Notes.Item (Item, fromString)
+import Src.Notes.Item (Item, itemFromString)
 
 notesDir :: String
 notesDir = "~/.hh/notes"
@@ -17,7 +17,7 @@ notes fileName = do
   (printItems . parseItems) contents
 
 parseItems :: String -> [Maybe Item]
-parseItems xs = map fromString (lines xs)
+parseItems xs = map itemFromString (lines xs)
 
 printItems :: [Maybe Item] -> IO ()
 printItems []     = putStrLn("")

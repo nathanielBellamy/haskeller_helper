@@ -1,6 +1,6 @@
 module Src.Notes.Item (
   Item,
-  fromString
+  itemFromString
 ) where
 
 data Item = Item { id :: Int
@@ -12,11 +12,11 @@ splitWhen p s =  case dropWhile p s of
                       s' -> w : splitWhen p s''
                             where (w, s'') = break p s'
 
-fromString :: String -> Maybe Item
-fromString [] = Nothing
-fromString xs = Just $ Item idNumber $ (tail . concat) pieces
+itemFromString :: String -> Maybe Item
+itemFromString [] = Nothing
+itemFromString xs = Just $ Item idNumber $ (tail . concat) pieces
   where
-    pieces = splitWhen (==':') xs
+    pieces = splitWhen (=='ʎ') xs
     idNumber = read (head pieces) :: Int
 
 instance Show Item where
