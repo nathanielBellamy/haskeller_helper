@@ -5,6 +5,7 @@ module Src.Notes.Notes (
 
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
+import Data.Time.Clock (getCurrentTime)
 
 import Src.Notes.Item (Item, itemFromString)
 
@@ -17,7 +18,13 @@ notes fileName = do
   (printItems . parseItems) contents
 
 parseItems :: String -> [Maybe Item]
-parseItems xs = map itemFromString (lines xs)
+parseItems xs
+  | (null . tail . lines) xs          = []
+  | (null . tail . tail . lines) xs   = []
+  | otherwise                         = map itemFromString itemLines
+  where
+    itemLines = (tail . tail . lines) xs
+
 
 printItems :: [Maybe Item] -> IO ()
 printItems []     = putStrLn("")
@@ -32,15 +39,16 @@ createLoadFile fileName =
     pathExists <- doesPathExist(filePath)
     case pathExists of
       False -> createNoteFile filePath fileName
-      True -> readFile filePath
+      True  -> readFile filePath
 
 createNoteFile :: String -> String -> IO String
 createNoteFile filePath fileName =
   let
-    header = "" -- ("-- " ++ filePath ++ "\n-- HH NOTE: " ++ fileName)
   in do
     createDirectoryIfMissing True (takeDirectory filePath)
-    writeFile filePath header
+    now <- getCurrentTime
+    writeFile filePath "HHʎnote\n"
+    appendFile filePath (show now)
     readFile filePath
 
 noteAddItem :: String -> String -> IO ()

@@ -29,6 +29,7 @@ handle args = do
 
       -- default
       ["-h"]        -> printHelp
+      []            -> putStrLn("")
       _             -> printDefault
 
 printDefault =
