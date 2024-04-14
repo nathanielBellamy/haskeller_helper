@@ -8,6 +8,7 @@ import System.IO
 import Data.List
 import Src.Primes.Primes
 import Src.Notes.Notes
+import Src.Notes.Note (noteAddItem)
 
 main :: IO()
 main = do
@@ -33,7 +34,7 @@ handle args = do
       _             -> printDefault
 
 printDefault =
-  let msg = "ʎ✋ Haskeller Helper ʎ✋ \n You may have arrived here due to unrecognized input pattern. \n Use -h for help "
+  let msg = "λ✋ Haskeller Helper λ✋ \n You may have arrived here due to unrecognized input pattern. \n Use -h for help "
   in do putStrLn msg
 
 printHelp = putStrLn "TODO: Make Help Section"

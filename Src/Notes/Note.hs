@@ -1,19 +1,33 @@
 module Src.Notes.Note (
-  Note,
-  noteFromString
+  -- noteDeserialize
+  noteAddItem
 ) where
 
-import Src.Notes.Item (Item)
-import Data.DateTime
+import System.Directory (createDirectoryIfMissing, doesPathExist)
+-- import Data.DateTime
 
-data Note = Note { title :: String
-                 , updatedAt :: DateTime
-                 , items :: [Item] }
+import Src.Notes.Item (Item, itemDeserialize, itemSerialize)
+import Src.Notes.Notes (notesDir)
 
-noteFromString :: IO String -> Maybe Note
-noteFromString [] = Nothing
-noteFromString xs =  do
-  let noteLines = lines xs
-  let updatedAt = read (head noteLines) :: DateTime
-  let items = map itemFromString $ tail noteLines;
+-- data Note = Note { title :: String
+--                  , updatedAt :: Data.DateTime
+--                  , items :: [Item] }
+
+-- noteDeserialize :: IO String -> Maybe Note
+-- noteDeserialize [] = Nothing
+-- noteDeserialize xs =  do
+--   let noteLines = lines xs
+--   let updatedAt = read (head noteLines) :: DateTime
+--   let items = map itemDeserialize $ tail noteLines
+--   Just Note "foo" updateAt items
+
+noteAddItem :: String -> String -> IO ()
+noteAddItem fileName itemInput =
+  let filePath = notesDir ++ "/" ++ fileName ++ ".txt"
+      onLoadSuccess = appendFile filePath $ "\n" ++ "2λ" ++ itemInput
+  in do
+    pathExists <- doesPathExist(filePath)
+    case pathExists of
+      True  -> onLoadSuccess
+      False -> putStrLn("Could not find note: " ++ fileName)
 

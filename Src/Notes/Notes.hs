@@ -1,13 +1,14 @@
 module Src.Notes.Notes (
-  noteAddItem,
-  notes
+  notes,
+  notesDir
 ) where
 
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
 import Data.Time.Clock (getCurrentTime)
 
-import Src.Notes.Item (Item, itemFromString)
+import Src.Notes.Item (Item, itemDeserialize, itemSerialize)
+-- import Src.Notes.Note (Note)
 
 notesDir :: String
 notesDir = "~/.hh/notes"
@@ -21,7 +22,7 @@ parseItems :: String -> [Maybe Item]
 parseItems xs
   | (null . tail . lines) xs          = []
   | (null . tail . tail . lines) xs   = []
-  | otherwise                         = map itemFromString itemLines
+  | otherwise                         = map itemDeserialize itemLines
   where
     itemLines = (tail . tail . lines) xs
 
@@ -47,15 +48,6 @@ createNoteFile filePath fileName =
   in do
     createDirectoryIfMissing True (takeDirectory filePath)
     now <- getCurrentTime
-    writeFile filePath "HHʎnote\n"
+    writeFile filePath "HHλnote\n"
     appendFile filePath (show now)
     readFile filePath
-
-noteAddItem :: String -> String -> IO ()
-noteAddItem fileName item =
-  let filePath = notesDir ++ "/" ++ fileName ++ ".txt"
-  in do
-    pathExists <- doesPathExist(filePath)
-    case pathExists of
-      True  -> appendFile filePath $ "\n" ++ item
-      False -> putStrLn("Could not find note: " ++ fileName)
