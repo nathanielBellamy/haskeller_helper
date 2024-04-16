@@ -1,13 +1,13 @@
 module Src.Notes.Item (
-  Item,
+  Item (..),
   itemSerialize,
   itemDeserialize
 ) where
 
 import Src.Util.StringHelper (hhSplit, hhSplitMarker)
 
-data Item = Item { id :: Int
-                 , body :: String }
+data Item = Item { itemId  :: Int
+                 , itemBody :: String }
 
 itemDeserialize :: String -> Maybe Item
 itemDeserialize [] = Nothing

@@ -8,7 +8,7 @@ import System.IO
 import Data.List
 import Src.Primes.Primes
 import Src.Notes.Notes
-import Src.Notes.Note (noteAddItem)
+import Src.Notes.Note (noteLoadAddItem)
 
 main :: IO()
 main = do
@@ -26,7 +26,7 @@ handle args = do
 
       -- notes
       ["-n", x]     -> notes x
-      ["-na", x, y] -> noteAddItem x y
+      ["-na", x, y] -> noteLoadAddItem x y
 
       -- default
       ["-h"]        -> printHelp
