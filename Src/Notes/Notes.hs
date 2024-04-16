@@ -5,31 +5,19 @@ module Src.Notes.Notes (
 
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
-import Data.Map
 import Data.Time.Clock (getCurrentTime)
 
 import Src.Notes.Item (Item, itemDeserialize, itemSerialize)
-import Src.Notes.Note (noteTitleSerialize)
+import Src.Notes.Note (noteDeserialize, notePrint, noteTitleSerialize)
 import Src.Util.DirectoryStructure (notesDir)
 
 notes :: String -> IO ()
 notes fileName = do
   contents <- createLoadFile fileName
-  (printItems . parseItems) contents
-
-parseItems :: String -> [Maybe Item]
-parseItems xs
-  | (null . tail . lines) xs          = []
-  | (null . tail . tail . lines) xs   = []
-  | otherwise                         = map itemDeserialize itemLines
-  where
-    itemLines = (tail . tail . lines) xs
-
-printItems :: [Maybe Item] -> IO ()
-printItems []     = putStrLn("")
-printItems (x:xs) = do
-  (putStrLn . show) x
-  printItems xs
+  let maybeNote = noteDeserialize contents
+  case maybeNote of
+    Nothing -> putStrLn $ "An Error Occurred Parsing Note: " ++ fileName
+    Just n  -> notePrint n
 
 createLoadFile :: String -> IO String
 createLoadFile fileName =
@@ -47,5 +35,5 @@ createNoteFile filePath fileName =
     createDirectoryIfMissing True (takeDirectory filePath)
     now <- getCurrentTime
     writeFile filePath (noteTitleSerialize fileName)
-    appendFile filePath (show now)
+    appendFile filePath $ "\n" ++ (show now)
     readFile filePath
