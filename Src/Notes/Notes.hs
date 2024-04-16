@@ -10,9 +10,7 @@ import Data.Time.Clock (getCurrentTime)
 
 import Src.Notes.Item (Item, itemDeserialize, itemSerialize)
 import Src.Notes.Note (noteTitleSerialize)
-
-notesDir :: String
-notesDir = "~/.hh/notes"
+import Src.Util.DirectoryStructure (notesDir)
 
 notes :: String -> IO ()
 notes fileName = do

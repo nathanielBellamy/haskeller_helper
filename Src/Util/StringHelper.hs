@@ -1,12 +1,13 @@
 module Src.Util.StringHelper (
-  hhSplit
+  hhSplit,
+  hhSplitMarker
 ) where
 
 hhSplitMarker :: String
 hhSplitMarker = ['λ']
 
 hhSplit :: String -> [String]
-hhSplit str = splitWhen (==hhSplitMarker) str
+hhSplit str = splitWhen (==(head hhSplitMarker)) str
 
 splitWhen :: (Char -> Bool) -> String -> [String]
 splitWhen p s =  case dropWhile p s of

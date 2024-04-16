@@ -9,7 +9,7 @@ import Src.Util.StringHelper (hhSplit, hhSplitMarker)
 -- import Data.DateTime
 
 import Src.Notes.Item (Item, itemDeserialize, itemSerialize)
-import Src.Notes.Notes (notesDir)
+import Src.Util.DirectoryStructure (notesDir)
 
 data Note = Note { title :: String
                  , updatedAt :: Data.DateTime
