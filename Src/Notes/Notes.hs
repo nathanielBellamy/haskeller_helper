@@ -5,10 +5,11 @@ module Src.Notes.Notes (
 
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import System.FilePath.Posix (takeDirectory)
+import Data.Map
 import Data.Time.Clock (getCurrentTime)
 
 import Src.Notes.Item (Item, itemDeserialize, itemSerialize)
--- import Src.Notes.Note (Note)
+import Src.Notes.Note (noteTitleSerialize)
 
 notesDir :: String
 notesDir = "~/.hh/notes"
@@ -25,7 +26,6 @@ parseItems xs
   | otherwise                         = map itemDeserialize itemLines
   where
     itemLines = (tail . tail . lines) xs
-
 
 printItems :: [Maybe Item] -> IO ()
 printItems []     = putStrLn("")
@@ -48,6 +48,6 @@ createNoteFile filePath fileName =
   in do
     createDirectoryIfMissing True (takeDirectory filePath)
     now <- getCurrentTime
-    writeFile filePath "HHλnote\n"
+    writeFile filePath (noteTitleSerialize fileName)
     appendFile filePath (show now)
     readFile filePath

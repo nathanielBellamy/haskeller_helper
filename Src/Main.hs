@@ -39,7 +39,6 @@ printDefault =
 
 printHelp = putStrLn "TODO: Make Help Section"
 
-
 repl :: IO ()
 repl = do
   input <- replRead
@@ -53,5 +52,3 @@ replRead :: IO String
 replRead = putStr "HH> "
          >> hFlush stdout
          >> getLine
-
-
