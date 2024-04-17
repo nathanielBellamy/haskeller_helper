@@ -37,3 +37,5 @@ createNoteFile filePath fileName =
     writeFile filePath (noteTitleSerialize fileName)
     appendFile filePath $ "\n" ++ (show now)
     readFile filePath
+
+

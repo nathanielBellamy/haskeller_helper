@@ -17,7 +17,7 @@ itemDeserialize xs = Just $ Item idNumber $ (tail . concat) pieces
     idNumber = read (head pieces) :: Int
 
 itemSerialize :: Item -> String
-itemSerialize (Item id body) = "id" ++ hhSplitMarker ++ show id ++ hhSplitMarker ++ body
+itemSerialize (Item itemId itemBody) = show itemId ++ hhSplitMarker ++ itemBody
 
 instance Show Item where
-  show (Item id body) = show ("Item: {id: " ++ show id ++ ", body: " ++ body ++ " }")
+  show (Item itemId itemBody) = " " ++ (show itemId) ++ ": " ++ itemBody

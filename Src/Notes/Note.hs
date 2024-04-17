@@ -13,69 +13,79 @@ import Data.Time.Clock (getCurrentTime, UTCTime)
 import Src.Notes.Item (Item(..), itemDeserialize, itemSerialize)
 import Src.Util.DirectoryStructure (notePath)
 
-data Note = Note { title :: String
-                 , updatedAt :: UTCTime
-                 , items :: [Item] }
+data Note = Note { noteTitle :: String
+                 , noteUpdatedAt :: UTCTime
+                 , noteItems :: [Item] }
 
 noteDeserialize :: String -> Maybe Note
 noteDeserialize [] = Nothing
 noteDeserialize xs =  do
   let noteLines = lines xs
-  let title = (titleDeserialize . head) noteLines
+  let title = (noteTitleDeserialize . head) noteLines
   let updatedAt = read ((head . tail) noteLines) :: UTCTime
-  let items = itemsDeserialize $ (tail . tail) noteLines
+  let itemsLines = (tail . tail) noteLines
+  let items = case (null itemsLines) of
+                True   -> []
+                False  -> noteItemsDeserialize itemsLines
   Just $ Note title updatedAt items
 
 noteSerialize :: Note -> String
-noteSerialize note = ((noteTitleSerialize . title) note)
-                        ++ "\n" ++ ((show . updatedAt) note)
-                        ++ "\n" ++ ((itemsSerialize . items) note)
+noteSerialize note = ((noteTitleSerialize . noteTitle) note)
+                        ++ "\n" ++ ((show . noteUpdatedAt) note)
+                        ++ "\n" ++ ((noteItemsSerialize . noteItems) note)
 
 noteTitleSerialize :: String -> String
 noteTitleSerialize title = "HH" ++ hhSplitMarker ++ "note" ++ hhSplitMarker ++ title
 
-titleDeserialize :: String -> String
-titleDeserialize xs = head $ (tail . tail) $ hhSplit xs
+noteTitleDeserialize :: String -> String
+noteTitleDeserialize xs = head $ (tail . tail) $ hhSplit xs
 
-itemsDeserialize :: [String] -> [Item]
-itemsDeserialize [] = []
-itemsDeserialize xs = foldr func [] xs
+noteItemsDeserialize :: [String] -> [Item]
+noteItemsDeserialize [] = []
+noteItemsDeserialize xs = foldr func [] xs
                       where func :: String -> [Item] -> [Item]
                             func []  items   = items
                             func str items   = case (itemDeserialize str) of
                                                  Nothing   -> items
                                                  Just i    -> i:items
 
-itemsSerialize :: [Item] -> String
-itemsSerialize []    = []
-itemsSerialize items = foldr func "" items
+noteItemsSerialize :: [Item] -> String
+noteItemsSerialize []    = []
+noteItemsSerialize items = foldr func "" items
                        where func :: Item -> String -> String
-                             func item str = str ++ "\n" ++ (itemSerialize item)
+                             func item str = str ++ ((itemSerialize item) ++ "\n")
 
 notePrint :: Note -> IO ()
 notePrint note = do
-  putStrLn $ title note
-  putStrLn $ show (updatedAt note)
-  itemsPrint (items note)
+  putStrLn $ noteTitle note
+  putStrLn $ show (noteUpdatedAt note)
+  noteItemsPrint (noteItems note)
 
-itemsPrint :: [Item] -> IO ()
-itemsPrint []     = putStrLn("")
-itemsPrint (x:xs) = do
+noteItemsPrint :: [Item] -> IO ()
+noteItemsPrint []     = putStrLn("")
+noteItemsPrint (x:xs) = do
   (putStrLn . show) x
-  itemsPrint xs
+  noteItemsPrint xs
 
 noteLoad :: String -> IO (Maybe Note)
 noteLoad fileName = do
   let filePath = notePath fileName
   pathExists <- doesPathExist(filePath)
   case pathExists of
-    True  -> return Nothing
-    False -> do
+    False  -> do
+      putStrLn("Error: noteLoad filePath does not exist. Attempted to load: " ++ filePath)
+      return Nothing
+    True -> do
       contents <- readFile filePath
-      return (noteDeserialize contents)
+      let noteMaybe = noteDeserialize contents
+      case noteMaybe of
+        Just n  -> return(Just n)
+        Nothing -> do
+          putStrLn("Error: Unable To Deserialize Note: " ++ fileName)
+          return(Nothing)
 
 noteNewItemId :: Note -> Int
-noteNewItemId note = (foldr gt 0 (items note)) + 1
+noteNewItemId note = (foldr gt 0 (noteItems note)) + 1
                      where gt :: Item -> Int -> Int
                            gt item oldMax = let iid = (itemId item) in do
                                             case (iid > oldMax) of
@@ -86,14 +96,22 @@ noteAddItem :: Note -> String -> IO Note
 noteAddItem note newItemBody = do
   updatedAt <- getCurrentTime
   let newItem = Item {itemId=(noteNewItemId note), itemBody=newItemBody}
-  let newItems = (items note) ++ [newItem]
-  return (Note (title note) updatedAt newItems)
+  let newItems = (noteItems note) ++ [newItem]
+  return (Note (noteTitle note) updatedAt newItems)
 
 noteLoadAddItem :: String -> String -> IO ()
 noteLoadAddItem fileName newItemBody = do
   note <- noteLoad fileName
   case note of
-    Nothing -> return ()
+    Nothing -> putStrLn("Error: Unable To Load Note: " ++ fileName)
     Just n  -> do
       noteNew <- noteAddItem n newItemBody
+      (putStrLn . show) noteNew
       writeFile (notePath fileName) (noteSerialize noteNew)
+
+
+instance Show Note where
+  show (Note noteTitle noteUpdatedAt noteItems) = show ("Note: {title: " ++ noteTitle
+                                                          ++ ", updatedAt: " ++ (show noteUpdatedAt)
+                                                          ++ ", items: " ++ (noteItemsSerialize noteItems)
+                                                          ++ " }")

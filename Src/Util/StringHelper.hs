@@ -4,7 +4,7 @@ module Src.Util.StringHelper (
 ) where
 
 hhSplitMarker :: String
-hhSplitMarker = ['λ']
+hhSplitMarker = [',']
 
 hhSplit :: String -> [String]
 hhSplit str = splitWhen (==(head hhSplitMarker)) str
