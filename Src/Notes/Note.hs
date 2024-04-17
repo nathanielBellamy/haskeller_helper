@@ -47,7 +47,7 @@ noteItemsDeserialize xs = foldr func [] xs
                             func []  items   = items
                             func str items   = case (itemDeserialize str) of
                                                  Nothing   -> items
-                                                 Just i    -> i:items
+                                                 Just i    -> items ++ [i]
 
 noteItemsSerialize :: [Item] -> String
 noteItemsSerialize []    = []
