@@ -6,7 +6,7 @@ module Src.Notes.Note (
   noteTitleSerialize
 ) where
 
-import Data.List (foldl')
+import Data.List (foldl', intercalate)
 import Data.Time.Clock (getCurrentTime, UTCTime)
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import Src.Util.StringHelper (hhSplit, hhSplitMarker)
@@ -100,13 +100,13 @@ noteAddItem note newItemBody = do
   let newItems = (noteItems note) ++ [newItem]
   return (Note (noteTitle note) updatedAt newItems)
 
-noteLoadAddItem :: String -> String -> IO ()
+noteLoadAddItem :: String -> [String] -> IO ()
 noteLoadAddItem fileName newItemBody = do
   note <- noteLoad fileName
   case note of
     Nothing -> putStrLn("Error: Unable To Load Note: " ++ fileName)
     Just n  -> do
-      noteNew <- noteAddItem n newItemBody
+      noteNew <- noteAddItem n $ intercalate " " newItemBody
       (putStrLn . show) noteNew
       writeFile (notePath fileName) (noteSerialize noteNew)
 

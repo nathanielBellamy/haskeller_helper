@@ -26,7 +26,7 @@ handle args = do
 
       -- notes
       ["-n", x]     -> notes x
-      ["-n", x, y] -> noteLoadAddItem x y
+      "-n":(x:xs)  -> noteLoadAddItem x xs
 
       -- default
       ["-h"]        -> printHelp
