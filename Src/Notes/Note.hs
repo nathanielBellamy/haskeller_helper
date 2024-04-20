@@ -6,9 +6,10 @@ module Src.Notes.Note (
   noteTitleSerialize
 ) where
 
+import Data.List (foldl')
+import Data.Time.Clock (getCurrentTime, UTCTime)
 import System.Directory (createDirectoryIfMissing, doesPathExist)
 import Src.Util.StringHelper (hhSplit, hhSplitMarker)
-import Data.Time.Clock (getCurrentTime, UTCTime)
 
 import Src.Notes.Item (Item(..), itemDeserialize, itemSerialize)
 import Src.Util.DirectoryStructure (notePath)
@@ -42,18 +43,18 @@ noteTitleDeserialize xs = head $ (tail . tail) $ hhSplit xs
 
 noteItemsDeserialize :: [String] -> [Item]
 noteItemsDeserialize [] = []
-noteItemsDeserialize xs = foldr func [] xs
-                      where func :: String -> [Item] -> [Item]
-                            func []  items   = items
-                            func str items   = case (itemDeserialize str) of
+noteItemsDeserialize xs = foldl' func [] xs
+                      where func :: [Item] -> String -> [Item]
+                            func items []   = items
+                            func items str  = case (itemDeserialize str) of
                                                  Nothing   -> items
-                                                 Just i    -> items ++ [i]
+                                                 Just i    -> i:items
 
 noteItemsSerialize :: [Item] -> String
 noteItemsSerialize []    = []
-noteItemsSerialize items = foldr func "" items
-                       where func :: Item -> String -> String
-                             func item str = str ++ ((itemSerialize item) ++ "\n")
+noteItemsSerialize items = foldl' func "" items
+                       where func :: String -> Item -> String
+                             func str item = ((itemSerialize item) ++ "\n") ++ str
 
 notePrint :: Note -> IO ()
 notePrint note = do
