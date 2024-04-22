@@ -1,4 +1,5 @@
 module Src.Notes.Note (
+  Note (..),
   noteAddItem,
   noteDeserialize,
   noteLoadAddItem,

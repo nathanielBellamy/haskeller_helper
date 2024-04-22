@@ -7,7 +7,7 @@ import System.Environment (getArgs)
 import System.IO
 import Data.List
 import Src.Primes.Primes
-import Src.Notes.Notes
+import Src.Notes.Notes (notesRepl)
 import Src.Notes.Note (noteLoadAddItem)
 
 main :: IO()
@@ -25,7 +25,7 @@ handle args = do
       ["-p", x]     -> primes x
 
       -- notes
-      ["-n", x]     -> notes x
+      ["-n"]     -> notesRepl []
       "-n":(x:xs)  -> noteLoadAddItem x xs
 
       -- default
