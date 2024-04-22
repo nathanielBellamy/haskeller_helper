@@ -19,16 +19,15 @@ data Note = Note { noteTitle :: String
                  , noteItems :: [Item] }
 
 noteDeserialize :: String -> Maybe Note
-noteDeserialize [] = Nothing
-noteDeserialize xs =  do
-  let noteLines = lines xs
-  let title = (noteTitleDeserialize . head) noteLines
-  let updatedAt = read ((head . tail) noteLines) :: UTCTime
-  let itemsLines = (tail . tail) noteLines
-  let items = case (null itemsLines) of
+noteDeserialize []           = Nothing
+noteDeserialize xs           = Just $ Note title updatedAt items
+  where noteLines = lines xs
+        title = (noteTitleDeserialize . head) noteLines
+        updatedAt = read ((head . tail) noteLines) :: UTCTime
+        itemsLines = (tail . tail) noteLines
+        items = case (null itemsLines) of
                 True   -> []
                 False  -> noteItemsDeserialize itemsLines
-  Just $ Note title updatedAt items
 
 noteSerialize :: Note -> String
 noteSerialize note = ((noteTitleSerialize . noteTitle) note)
@@ -37,6 +36,7 @@ noteSerialize note = ((noteTitleSerialize . noteTitle) note)
 
 noteTitleSerialize :: String -> String
 noteTitleSerialize title = "HH" ++ hhSplitMarker ++ "note" ++ hhSplitMarker ++ title
+
 
 noteTitleDeserialize :: String -> String
 noteTitleDeserialize xs = head $ (tail . tail) $ hhSplit xs
@@ -48,13 +48,13 @@ noteItemsDeserialize xs = foldl' func [] xs
                             func items []   = items
                             func items str  = case (itemDeserialize str) of
                                                  Nothing   -> items
-                                                 Just i    -> i:items
+                                                 Just i    -> items ++ [i]
 
 noteItemsSerialize :: [Item] -> String
 noteItemsSerialize []    = []
 noteItemsSerialize items = foldl' func "" items
                        where func :: String -> Item -> String
-                             func str item = ((itemSerialize item) ++ "\n") ++ str
+                             func str item = str ++ "\n" ++ (itemSerialize item)
 
 notePrint :: Note -> IO ()
 notePrint note = do
